@@ -226,7 +226,7 @@ async function handleLogin(){
 const res=await fetch("/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})});    const data=await res.json();
     if(!res.ok)throw new Error(data.error||"Login failed");
     localStorage.setItem("adminToken",data.token);
-    window.location.href="/";
+    window.location.href="/admin";
   }catch(err){
     errorTxt.textContent=err.message||"Something went wrong. Please try again.";
     errorBox.classList.add("show");input.classList.add("error");input.value="";input.focus();
