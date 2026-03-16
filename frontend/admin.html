@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — SupportIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brand:       #2563EB;
+  --brand-light: #EFF6FF;
+  --brand-dark:  #1D4ED8;
+  --brand-deeper:#1338BE;
+  --surface:     #FFFFFF;
+  --bg:          #EEF5FF;
+  --border:      #DBEAFE;
+  --text-primary:   #0F172A;
+  --text-secondary: #475569;
+  --text-muted:     #94A3B8;
+  --danger:      #EF4444;
+  --danger-light:#FEF2F2;
+  --success:     #10B981;
+  --success-light:#ECFDF5;
+  --warning:     #F59E0B;
+  --warning-light:#FFFBEB;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --font: 'DM Sans', 'Segoe UI', sans-serif;
+  --bounce: cubic-bezier(0.34,1.56,0.64,1);
+}
+body { font-family: var(--font); background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ── Topbar ── */
+.topbar { background: linear-gradient(135deg, #2C3E6B 0%, #3A5299 100%); height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 10px rgba(44,62,107,.22); }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-brand { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; color: white; text-decoration: none; letter-spacing: -.2px; }
+.topbar-logo { width: 30px; height: 30px; background: rgba(255,255,255,.2); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.25); }
+.topbar-div  { width: 1px; height: 20px; background: rgba(255,255,255,.25); }
+.topbar-badge { font-size: 11px; font-weight: 600; background: rgba(255,255,255,.18); color: white; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.3); letter-spacing: .3px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-link { font-size: 13px; color: rgba(255,255,255,.8); text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm); transition: all .15s; display: flex; align-items: center; gap: 5px; border: 1px solid rgba(255,255,255,.2); }
+.topbar-link:hover { background: rgba(255,255,255,.15); color: white; }
+.btn-logout { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 6px 14px; background: rgba(239,68,68,.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,.3); border-radius: var(--radius-sm); cursor: pointer; transition: all .15s; }
+.btn-logout:hover { background: rgba(239,68,68,.25); color: #FEE2E2; }
+
+/* ── Shell ── */
+.shell { display: flex; min-height: calc(100vh - 58px); }
+
+/* ── Sidenav ── */
+.sidenav { width: 224px; flex-shrink: 0; background: linear-gradient(180deg, #2C3E6B 0%, #3A5299 100%); display: flex; flex-direction: column; padding: 20px 0; box-shadow: 2px 0 10px rgba(44,62,107,.18); }
+.nav-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.4); padding: 0 18px 8px; margin-top: 10px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.75); cursor: pointer; transition: all .2s; border-left: 3px solid transparent; user-select: none; margin: 1px 8px; border-radius: 8px; }
+.nav-item:hover { background: rgba(255,255,255,.12); color: white; border-left-color: rgba(255,255,255,.5); }
+.nav-item.active { background: rgba(255,255,255,.18); color: white; border-left-color: white; font-weight: 700; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-count { margin-left: auto; font-size: 11px; font-weight: 600; background: rgba(255,255,255,.2); color: white; padding: 2px 8px; border-radius: 999px; min-width: 24px; text-align: center; }
+.nav-item.active .nav-count { background: white; color: var(--brand-dark); font-weight: 700; }
+.nav-sep { height: 1px; background: rgba(255,255,255,.12); margin: 10px 18px; }
+.nav-footer { margin-top: auto; padding: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+.nav-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,.1); border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,.15); }
+.nav-avatar { width: 32px; height: 32px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--brand-dark); flex-shrink: 0; }
+.nav-uname { font-size: 12px; font-weight: 600; color: white; }
+.nav-urole { font-size: 11px; color: rgba(255,255,255,.5); }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; }
+.view { display: none; flex: 1; flex-direction: column; }
+.view.active { display: flex; }
+
+/* ── Page strip ── */
+.page-strip { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; flex-shrink: 0; box-shadow: 0 1px 4px rgba(29,78,216,.06); }
+.page-strip h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; color: var(--text-primary); }
+.page-strip p  { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Content ── */
+.content { padding: 24px 28px; flex: 1; }
+
+/* ── Stats ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; transition: all .2s; position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: radial-gradient(circle, rgba(37,99,235,.06), transparent 70%); border-radius: 0 var(--radius-lg) 0 60px; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(29,78,216,.14); border-color: rgba(37,99,235,.25); }
+.stat-icon  { font-size: 22px; margin-bottom: 12px; }
+.stat-num   { font-size: 32px; font-weight: 700; letter-spacing: -1px; background: linear-gradient(135deg, var(--brand-dark), var(--brand)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; }
+
+/* ── Dash grid ── */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(29,78,216,.06); }
+.panel-hd { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #F8FAFF, var(--bg)); color: var(--text-primary); }
+.panel-hd a { font-size: 12px; color: var(--brand); text-decoration: none; font-weight: 500; cursor: pointer; }
+.panel-hd a:hover { text-decoration: underline; color: var(--brand-dark); }
+.panel-body { flex: 1; }
+
+/* Quick actions */
+.qa-list { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.qa-btn { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; text-decoration: none; transition: all .2s; font-family: var(--font); }
+.qa-btn:hover { border-color: var(--brand); background: var(--brand-light); transform: translateX(4px); box-shadow: 0 4px 12px rgba(37,99,235,.1); }
+.qa-icon { width: 34px; height: 34px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.qa-text { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.qa-sub  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.qa-arr  { margin-left: auto; color: var(--brand); font-size: 16px; font-weight: 600; transition: transform .2s; }
+.qa-btn:hover .qa-arr { transform: translateX(4px); }
+
+/* Msg item */
+.msg-item { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .1s; }
+.msg-item:last-child { border-bottom: none; }
+.msg-item:hover { background: var(--bg); }
+.msg-name { font-size: 13px; font-weight: 600; }
+.msg-sub  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.msg-date { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+/* ── Toolbar ── */
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+.search-wrap { position: relative; }
+.search-wrap input { font-family: var(--font); font-size: 13px; color: var(--text-primary); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 9px 12px 9px 36px; width: 260px; outline: none; transition: all .15s; box-shadow: 0 1px 4px rgba(29,78,216,.06); }
+.search-wrap input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-muted); pointer-events: none; }
+
+/* ── Table ── */
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 2px 8px rgba(29,78,216,.06); }
+table { width: 100%; border-collapse: collapse; }
+thead th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--brand-dark); background: linear-gradient(135deg, #F0F7FF, var(--bg)); padding: 11px 16px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #F8FBFF; }
+tbody td { font-size: 13px; color: var(--text-primary); padding: 13px 16px; vertical-align: middle; }
+.td-mono { font-size: 11px; font-family: monospace; color: var(--text-muted); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.td-wrap { max-width: 280px; line-height: 1.5; }
+.td-preview { max-width: 220px; font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.loading-cell { color: var(--text-muted); font-size: 13px; padding: 32px; text-align: center; }
+
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.badge-blue  { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #BFDBFE; }
+.badge-green { background: var(--success-light); color: #059669; border: 1px solid #A7F3D0; }
+.badge-amber { background: var(--warning-light); color: #D97706; border: 1px solid #FDE68A; }
+.badge-red   { background: var(--danger-light); color: var(--danger); border: 1px solid #FECACA; }
+.badge-gray  { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+
+/* ── Row actions ── */
+.row-actions { display: flex; gap: 6px; align-items: center; }
+.btn-icon { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all .15s; font-family: var(--font); color: var(--text-secondary); white-space: nowrap; }
+.btn-icon:hover { background: var(--brand-light); color: var(--brand-dark); border-color: rgba(37,99,235,.3); }
+.btn-icon.danger  { border-color: #FECACA; color: var(--danger); background: #FFF5F5; }
+.btn-icon.danger:hover  { background: var(--danger-light); border-color: var(--danger); }
+.btn-icon.primary { border-color: #BFDBFE; color: var(--brand-dark); font-weight: 600; background: var(--brand-light); }
+.btn-icon.primary:hover { background: #DBEAFE; color: var(--brand-dark); border-color: var(--brand); }
+
+/* ── Btn add ── */
+.btn-add { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font); font-size: 13px; font-weight: 600; padding: 9px 18px; background: linear-gradient(135deg, var(--brand-dark), var(--brand)); color: white; border: none; border-radius: var(--radius-md); cursor: pointer; transition: all .2s; white-space: nowrap; box-shadow: 0 4px 12px rgba(29,78,216,.4); letter-spacing: -.1px; }
+.btn-add:hover { background: linear-gradient(135deg, var(--brand-deeper), var(--brand-dark)); box-shadow: 0 6px 18px rgba(29,78,216,.5); transform: translateY(-1px); }
+
+/* ── Drill breadcrumb ── */
+.drill-bar { display: flex; align-items: center; gap: 6px; padding: 10px 28px; background: linear-gradient(135deg, #F0F7FF, var(--bg)); border-bottom: 1px solid var(--border); font-size: 12px; flex-shrink: 0; }
+.crumb { color: var(--text-muted); }
+.crumb.link { color: var(--brand); cursor: pointer; font-weight: 600; }
+.crumb.link:hover { text-decoration: underline; color: var(--brand-dark); }
+.crumb.cur { color: var(--text-primary); font-weight: 600; }
+.drill-sep { color: var(--border); }
+
+/* ── Sub-views ── */
+.sub-view { display: none; flex: 1; flex-direction: column; }
+.sub-view.active { display: flex; }
+
+/* ── Status select ── */
+.status-sel { font-family: var(--font); font-size: 12px; font-weight: 500; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; background: var(--surface); cursor: pointer; outline: none; transition: border-color .15s; }
+.status-sel:focus { border-color: var(--brand); }
+
+/* ── Modal ── */
+.overlay { position: fixed; inset: 0; background: rgba(15,23,42,.5); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
+.overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius-lg); width: 100%; max-width: 480px; box-shadow: 0 24px 56px rgba(0,0,0,.18); animation: mIn .15s ease; border: 1px solid var(--border); }
+@keyframes mIn { from{opacity:0;transform:scale(.97)} to{opacity:1;transform:scale(1)} }
+.modal-hd { padding: 18px 22px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #F8FAFF, var(--bg)); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.modal-title { font-size: 15px; font-weight: 700; color: var(--brand-dark); }
+.modal-x { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: var(--radius-sm); }
+.modal-x:hover { background: var(--bg); color: var(--text-primary); }
+.modal-body { padding: 20px 22px; }
+.modal-ft { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: var(--bg); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+
+.mf { margin-bottom: 16px; }
+.mf label { display: block; font-size: 11px; font-weight: 700; color: var(--brand-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+.mf input, .mf textarea, .mf select { width: 100%; font-family: var(--font); font-size: 14px; color: var(--text-primary); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 13px; outline: none; transition: all .15s; }
+.mf input:focus, .mf textarea:focus, .mf select:focus { border-color: var(--brand); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.mf textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+.mf small { font-size: 12px; color: var(--text-muted); margin-top: 5px; display: block; line-height: 1.5; }
+
+.btn-cancel { font-family: var(--font); font-size: 13px; font-weight: 500; padding: 9px 18px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: all .15s; }
+.btn-cancel:hover { background: var(--bg); color: var(--text-primary); border-color: rgba(37,99,235,.3); }
+.btn-save { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 9px 18px; background: linear-gradient(135deg, var(--brand-dark), var(--brand)); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: all .2s; box-shadow: 0 3px 10px rgba(29,78,216,.35); }
+.btn-save:hover { background: linear-gradient(135deg, var(--brand-deeper), var(--brand-dark)); box-shadow: 0 5px 14px rgba(29,78,216,.45); transform: translateY(-1px); }
+.btn-save:hover { background: var(--brand-dark); }
+.btn-del { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 9px 18px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: all .15s; box-shadow: 0 3px 8px rgba(239,68,68,.3); }
+.btn-del:hover { background: #DC2626; box-shadow: 0 5px 12px rgba(239,68,68,.4); }
+
+/* ── Toast ── */
+#toast { position: fixed; bottom: 24px; right: 24px; font-size: 13px; font-weight: 500; padding: 12px 18px; border-radius: var(--radius-md); display: none; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.15); z-index: 999; animation: tUp .2s ease; max-width: 320px; }
+#toast.show { display: flex; }
+#toast.success { background: #059669; color: white; }
+#toast.error   { background: var(--danger); color: white; }
+#toast.info    { background: var(--brand-dark); color: white; }
+@keyframes tUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Empty state ── */
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; color: var(--text-secondary); }
+.e-icon { font-size: 40px; margin-bottom: 16px; }
+.empty h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.empty p  { font-size: 13px; line-height: 1.6; max-width: 260px; }
+.empty .btn-add { margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="#" class="topbar-brand" onclick="showView('dashboard');return false;">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 18 18" fill="none" width="14" height="14">
+          <circle cx="9" cy="7" r="2.5" fill="white"/>
+          <path d="M4.5 14c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      SupportIQ
+    </a>
+    <div class="topbar-div"></div>
+    <span class="topbar-badge">Admin Panel</span>
+  </div>
+  <div class="topbar-right">
+    <a href="http://localhost:5000" class="topbar-link" target="_blank" rel="noopener">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.5 1.5H10.5V4.5M10.5 1.5L5 7M4 2.5H2C1.7 2.5 1.5 2.7 1.5 3V10C1.5 10.3 1.7 10.5 2 10.5H9C9.3 10.5 9.5 10.3 9.5 10V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      View site
+    </a>
+    <button class="btn-logout" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="sidenav">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">Content</div>
+    <div class="nav-item" id="nav-categories" onclick="showView('categories')">
+      <span class="nav-icon">🗂</span> Categories
+      <span class="nav-count" id="nc-cat">—</span>
+    </div>
+    <div class="nav-item" id="nav-knowledge" onclick="showView('knowledge')">
+      <span class="nav-icon">📚</span> Knowledge Base
+      <span class="nav-count" id="nc-kb">—</span>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">Inbox</div>
+    <div class="nav-item" id="nav-contacts" onclick="showView('contacts')">
+      <span class="nav-icon">✉️</span> Messages
+      <span class="nav-count" id="nc-msg">—</span>
+    </div>
+    <div class="nav-footer">
+      <div class="nav-user">
+        <div class="nav-avatar">A</div>
+        <div>
+          <div class="nav-uname">Administrator</div>
+          <div class="nav-urole">Full access</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-strip">
+        <div><h1>Dashboard</h1><p>Overview of your SupportIQ content and recent activity</p></div>
+        <button class="btn-add" onclick="showView('categories');setTimeout(openCatModal,80)">+ Add category</button>
+      </div>
+      <div class="content">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">🗂</div><div class="stat-num" id="s-cat">—</div><div class="stat-label">Categories</div></div>
+          <div class="stat-card"><div class="stat-icon">❓</div><div class="stat-num" id="s-q">—</div><div class="stat-label">Questions</div></div>
+          <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-num" id="s-a">—</div><div class="stat-label">Answers</div></div>
+          <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-num" id="s-kb">—</div><div class="stat-label">KB Entries</div></div>
+        </div>
+        <div class="dash-grid">
+          <div class="panel">
+            <div class="panel-hd"> Quick actions</div>
+            <div class="panel-body">
+              <div class="qa-list">
+                <div class="qa-btn" onclick="showView('categories');setTimeout(openCatModal,80)">
+                  <div class="qa-icon" style="background:#EFF6FF">🗂</div>
+                  <div><div class="qa-text">Add a category</div><div class="qa-sub">Create a new support topic</div></div>
+                  <span class="qa-arr">→</span>
+                </div>
+                <div class="qa-btn" onclick="showView('knowledge');setTimeout(openKbModal,80)">
+                  <div class="qa-icon" style="background:#ECFDF5">📚</div>
+                  <div><div class="qa-text">Add knowledge entry</div><div class="qa-sub">Improve the AI chatbot</div></div>
+                  <span class="qa-arr">→</span>
+                </div>
+                <div class="qa-btn" onclick="showView('contacts')">
+                  <div class="qa-icon" style="background:#FFFBEB">✉️</div>
+                  <div><div class="qa-text">View messages</div><div class="qa-sub">Customer contact submissions</div></div>
+                  <span class="qa-arr">→</span>
+                </div>
+                <a class="qa-btn" href="http://localhost:5000/categories" target="_blank" rel="noopener">
+                  <div class="qa-icon" style="background:#F5F3FF">🌐</div>
+                  <div><div class="qa-text">Preview categories page</div><div class="qa-sub">See what customers see</div></div>
+                  <span class="qa-arr">↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hd">✉️ Recent messages <a onclick="showView('contacts')">View all →</a></div>
+            <div class="panel-body" id="dash-msgs">
+              <div class="empty" style="padding:32px 20px;"><div class="e-icon">✉️</div><p>No messages yet</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="view" id="view-categories">
+      <div class="sub-view active" id="sv-cats">
+        <div class="page-strip">
+          <div><h1>Categories</h1><p>Manage support topics and their decision trees</p></div>
+          <button class="btn-add" onclick="openCatModal()">+ New category</button>
+        </div>
+        <div class="content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Category name</th><th>MongoDB ID</th><th style="width:200px;">Actions</th></tr></thead>
+              <tbody id="cat-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-view" id="sv-qs">
+        <div class="drill-bar">
+          <span class="crumb link" onclick="backToCats()">Categories</span>
+          <span class="drill-sep">/</span>
+          <span class="crumb cur" id="bc-cat"></span>
+          <span class="drill-sep">/</span>
+          <span class="crumb cur">Questions</span>
+        </div>
+        <div class="page-strip">
+          <div><h1 id="qs-title">Questions</h1><p>Decision tree questions for this category</p></div>
+          <button class="btn-add" onclick="openQModal()">+ New question</button>
+        </div>
+        <div class="content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question text</th><th>MongoDB ID</th><th style="width:210px;">Actions</th></tr></thead>
+              <tbody id="q-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-view" id="sv-as">
+        <div class="drill-bar">
+          <span class="crumb link" onclick="backToCats()">Categories</span>
+          <span class="drill-sep">/</span>
+          <span class="crumb link" onclick="backToQs()" id="bc-cat2"></span>
+          <span class="drill-sep">/</span>
+          <span class="crumb cur" id="bc-q"></span>
+          <span class="drill-sep">/</span>
+          <span class="crumb cur">Answers</span>
+        </div>
+        <div class="page-strip">
+          <div><h1>Answers</h1><p>Answer options and routing for this question</p></div>
+          <button class="btn-add" onclick="openAModal()">+ New answer</button>
+        </div>
+        <div class="content">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Answer text</th><th>Routes to</th><th style="width:130px;">Actions</th></tr></thead>
+              <tbody id="a-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KNOWLEDGE BASE -->
+    <div class="view" id="view-knowledge">
+      <div class="page-strip">
+        <div><h1>Knowledge Base</h1><p>Q&A entries powering the AI chatbot</p></div>
+        <button class="btn-add" onclick="openKbModal()">+ New entry</button>
+      </div>
+      <div class="content">
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search entries…" oninput="filterKb(this.value)">
+          </div>
+          <span id="kb-count" style="font-size:13px;color:var(--text-muted);"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:140px;">Category</th><th>Question</th><th>Answer</th><th style="width:120px;">Actions</th></tr></thead>
+            <tbody id="kb-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="view" id="view-contacts">
+      <div class="page-strip">
+        <div><h1>Customer Messages</h1><p>Contact form submissions from your users</p></div>
+        <span id="new-badge" style="display:none;" class="badge badge-red"></span>
+      </div>
+      <div class="content">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th><th>Status</th></tr></thead>
+            <tbody id="contacts-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="overlay" id="m-cat">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="m-cat-title">New category</span><button class="modal-x" onclick="cm('m-cat')">×</button></div>
+    <div class="modal-body">
+      <div class="mf"><label>Category name</label><input type="text" id="in-cat" placeholder="e.g. Network Troubleshooting" maxlength="100"></div>
+    </div>
+    <div class="modal-ft"><button class="btn-cancel" onclick="cm('m-cat')">Cancel</button><button class="btn-save" onclick="saveCat()">Save category</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-q">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="m-q-title">New question</span><button class="modal-x" onclick="cm('m-q')">×</button></div>
+    <div class="modal-body">
+      <div class="mf"><label>Question text</label><textarea id="in-q" placeholder="e.g. Are you unable to connect to WiFi?" maxlength="500"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn-cancel" onclick="cm('m-q')">Cancel</button><button class="btn-save" onclick="saveQ()">Save question</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-a">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="m-a-title">New answer</span><button class="modal-x" onclick="cm('m-a')">×</button></div>
+    <div class="modal-body">
+      <div class="mf"><label>Answer text</label><input type="text" id="in-a-text" placeholder="e.g. Yes, I can't connect at all" maxlength="300"></div>
+      <div class="mf">
+        <label>Next question ID <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(leave blank if solution)</span></label>
+        <input type="text" id="in-a-next" placeholder="MongoDB ObjectId of the next question">
+        <small>Copy the ID from the Questions table. Leave empty if this answer ends with a solution.</small>
+      </div>
+      <div class="mf"><label>Solution text <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(shown when no next question)</span></label><textarea id="in-a-sol" placeholder="Describe the fix the customer will see…" maxlength="1000"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn-cancel" onclick="cm('m-a')">Cancel</button><button class="btn-save" onclick="saveA()">Save answer</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-kb">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="m-kb-title">New knowledge entry</span><button class="modal-x" onclick="cm('m-kb')">×</button></div>
+    <div class="modal-body">
+      <div class="mf"><label>Category</label><input type="text" id="in-kb-cat" placeholder="e.g. Network Troubleshooting"></div>
+      <div class="mf"><label>Question</label><input type="text" id="in-kb-q" placeholder="e.g. How do I reset my router?"></div>
+      <div class="mf"><label>Answer</label><textarea id="in-kb-a" placeholder="The answer the AI chatbot will use…"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn-cancel" onclick="cm('m-kb')">Cancel</button><button class="btn-save" onclick="saveKb()">Save entry</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-del">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title">Confirm deletion</span><button class="modal-x" onclick="cm('m-del')">×</button></div>
+    <div class="modal-body"><p style="font-size:14px;color:var(--text-secondary);line-height:1.65;" id="del-msg"></p></div>
+    <div class="modal-ft"><button class="btn-cancel" onclick="cm('m-del')">Cancel</button><button class="btn-del" id="del-btn">Delete</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Auth ──────────────────────────────────────────────
+function getToken() { return localStorage.getItem("adminToken"); }
+
+function tokenValid() {
+  const t = getToken();
+  if (!t) return false;
+  try { const p = JSON.parse(atob(t.split(".")[1])); return p.exp * 1000 > Date.now(); }
+  catch { return false; }
+}
+
+if (!tokenValid()) window.location.href = "/login";
+
+function logout() { localStorage.removeItem("adminToken"); window.location.href = "/login"; }
+
+async function api(url, opts = {}) {
+  const res = await fetch(url, {
+    ...opts,
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + getToken(), ...(opts.headers||{}) }
+  });
+  if (res.status === 401) { localStorage.removeItem("adminToken"); window.location.href = "/login"; throw new Error("expired"); }
+  return res;
+}
+
+// ── State ─────────────────────────────────────────────
+let catId = null, catName = null, qId = null, qText = null, editId = null, allKb = [], pendDel = null;
+
+// ── Toast ─────────────────────────────────────────────
+let tTimer;
+function toast(msg, type="success") {
+  const el = document.getElementById("toast");
+  el.textContent = (type==="success"?"✓  ":type==="error"?"✕  ":"ℹ  ") + msg;
+  el.className = "show " + type;
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => el.className = "", 3500);
+}
+
+// ── Modals ────────────────────────────────────────────
+function om(id) { document.getElementById(id).classList.add("open"); }
+function cm(id) { document.getElementById(id).classList.remove("open"); editId = null; }
+document.querySelectorAll(".overlay").forEach(o => o.addEventListener("click", e => { if (e.target===o) o.classList.remove("open"); }));
+
+// ── Views ─────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("view-"+name).classList.add("active");
+  document.getElementById("nav-"+name).classList.add("active");
+  if (name==="dashboard")  loadDash();
+  if (name==="categories") { resetSv(); loadCats(); }
+  if (name==="knowledge")  loadKb();
+  if (name==="contacts")   loadContacts();
+}
+
+function resetSv() {
+  document.querySelectorAll(".sub-view").forEach(v => v.classList.remove("active"));
+  document.getElementById("sv-cats").classList.add("active");
+}
+
+function setSv(id) {
+  document.querySelectorAll(".sub-view").forEach(v => v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// ── Helpers ───────────────────────────────────────────
+function esc(s) { return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;").replace(/\n/g," "); }
+
+function fmtDate(d) {
+  const dt = new Date(d), now = new Date(), diff = now-dt;
+  if (diff < 60000)    return "Just now";
+  if (diff < 3600000)  return Math.floor(diff/60000)+"m ago";
+  if (diff < 86400000) return Math.floor(diff/3600000)+"h ago";
+  return dt.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+}
+
+function statusBadge(s) { return s==="new"?"badge-blue":s==="resolved"?"badge-green":"badge-gray"; }
+
+// ── Dashboard ─────────────────────────────────────────
+async function loadDash() {
+  try {
+    const d = await (await api("/stats")).json();
+    document.getElementById("s-cat").textContent = d.categories;
+    document.getElementById("s-q").textContent   = d.questions;
+    document.getElementById("s-a").textContent   = d.answers;
+    document.getElementById("s-kb").textContent  = d.knowledge;
+    document.getElementById("nc-cat").textContent = d.categories;
+    document.getElementById("nc-kb").textContent  = d.knowledge;
+  } catch {}
+
+  try {
+    const contacts = await (await api("/contacts")).json();
+    const newC = contacts.filter(c=>c.status==="new").length;
+    document.getElementById("nc-msg").textContent = newC || contacts.length;
+
+    const el = document.getElementById("dash-msgs");
+    if (!contacts.length) {
+      el.innerHTML = `<div class="empty" style="padding:28px 20px;"><div class="e-icon">✉️</div><p>No messages yet</p></div>`;
+      return;
+    }
+    el.innerHTML = contacts.slice(0,6).map(c=>`
+      <div class="msg-item">
+        <div>
+          <div class="msg-name">${c.firstName} ${c.lastName}</div>
+          <div class="msg-sub">${c.subject||"General"} · <span class="badge ${statusBadge(c.status)}">${c.status}</span></div>
+        </div>
+        <div class="msg-date">${fmtDate(c.createdAt)}</div>
+      </div>`).join("");
+  } catch {}
+}
+
+// ── Categories ────────────────────────────────────────
+async function loadCats() {
+  const tb = document.getElementById("cat-tbody");
+  tb.innerHTML = `<tr><td colspan="3" class="loading-cell">Loading…</td></tr>`;
+  try {
+    const cats = await (await api("/categories")).json();
+    document.getElementById("nc-cat").textContent = cats.length;
+    if (!cats.length) {
+      tb.innerHTML = `<tr><td colspan="3"><div class="empty"><div class="e-icon">🗂</div><h3>No categories yet</h3><p>Add your first category to get started.</p><button class="btn-add" onclick="openCatModal()">+ Add category</button></div></td></tr>`;
+      return;
+    }
+    tb.innerHTML = cats.map(c=>`
+      <tr>
+        <td style="font-weight:500;">${c.name}</td>
+        <td class="td-mono" title="${c._id}">${c._id}</td>
+        <td><div class="row-actions">
+          <button class="btn-icon primary" onclick="drillQs('${c._id}','${esc(c.name)}')">Questions →</button>
+          <button class="btn-icon" onclick="editCat('${c._id}','${esc(c.name)}')">Edit</button>
+          <button class="btn-icon danger" onclick="confirmDel('category','${c._id}','${esc(c.name)}')">Delete</button>
+        </div></td>
+      </tr>`).join("");
+  } catch { toast("Failed to load categories","error"); }
+}
+
+function openCatModal() {
+  editId = null;
+  document.getElementById("m-cat-title").textContent = "New category";
+  document.getElementById("in-cat").value = "";
+  om("m-cat");
+  setTimeout(()=>document.getElementById("in-cat").focus(),80);
+}
+
+function editCat(id, name) {
+  editId = id;
+  document.getElementById("m-cat-title").textContent = "Edit category";
+  document.getElementById("in-cat").value = name;
+  om("m-cat");
+}
+
+async function saveCat() {
+  const name = document.getElementById("in-cat").value.trim();
+  if (!name) { toast("Name is required","error"); return; }
+  try {
+    const res = await api(editId ? `/categories/${editId}` : "/categories", { method: editId?"PUT":"POST", body: JSON.stringify({name}) });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    toast(editId ? "Category updated" : "Category created — now live on the customer site");
+    cm("m-cat"); loadCats(); loadDash();
+  } catch(e) { toast(e.message,"error"); }
+}
+
+// ── Questions ─────────────────────────────────────────
+function drillQs(id, name) {
+  catId = id; catName = name;
+  setSv("sv-qs");
+  document.getElementById("bc-cat").textContent  = name;
+  document.getElementById("bc-cat2").textContent = name;
+  document.getElementById("qs-title").textContent = name+" — Questions";
+  loadQs();
+}
+
+function backToCats() { setSv("sv-cats"); loadCats(); }
+
+async function loadQs() {
+  const tb = document.getElementById("q-tbody");
+  tb.innerHTML = `<tr><td colspan="3" class="loading-cell">Loading…</td></tr>`;
+  try {
+    const qs = await (await api(`/categories/${catId}/questions`)).json();
+    if (!qs.length) {
+      tb.innerHTML = `<tr><td colspan="3"><div class="empty"><div class="e-icon">❓</div><h3>No questions yet</h3><p>Add a root question to start building this decision tree.</p><button class="btn-add" onclick="openQModal()">+ Add question</button></div></td></tr>`;
+      return;
+    }
+    tb.innerHTML = qs.map(q=>`
+      <tr>
+        <td class="td-wrap" style="font-weight:500;">${q.text}</td>
+        <td class="td-mono" title="${q._id}">${q._id}</td>
+        <td><div class="row-actions">
+          <button class="btn-icon primary" onclick="drillAs('${q._id}','${esc(q.text)}')">Answers →</button>
+          <button class="btn-icon" onclick="editQ('${q._id}','${esc(q.text)}')">Edit</button>
+          <button class="btn-icon danger" onclick="confirmDel('question','${q._id}','${esc(q.text)}')">Delete</button>
+        </div></td>
+      </tr>`).join("");
+  } catch { toast("Failed to load questions","error"); }
+}
+
+function openQModal() {
+  editId = null;
+  document.getElementById("m-q-title").textContent = "New question";
+  document.getElementById("in-q").value = "";
+  om("m-q");
+  setTimeout(()=>document.getElementById("in-q").focus(),80);
+}
+
+function editQ(id, text) {
+  editId = id;
+  document.getElementById("m-q-title").textContent = "Edit question";
+  document.getElementById("in-q").value = text;
+  om("m-q");
+}
+
+async function saveQ() {
+  const text = document.getElementById("in-q").value.trim();
+  if (!text) { toast("Question text is required","error"); return; }
+  try {
+    const body = editId ? {text} : {text, category_id: catId};
+    const res  = await api(editId ? `/questions/${editId}` : "/questions", { method: editId?"PUT":"POST", body: JSON.stringify(body) });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    toast(editId?"Question updated":"Question created");
+    cm("m-q"); loadQs(); loadDash();
+  } catch(e) { toast(e.message,"error"); }
+}
+
+// ── Answers ───────────────────────────────────────────
+function drillAs(id, text) {
+  qId = id; qText = text;
+  setSv("sv-as");
+  document.getElementById("bc-q").textContent = text.length>48 ? text.slice(0,48)+"…" : text;
+  loadAs();
+}
+
+function backToQs() { setSv("sv-qs"); loadQs(); }
+
+async function loadAs() {
+  const tb = document.getElementById("a-tbody");
+  tb.innerHTML = `<tr><td colspan="3" class="loading-cell">Loading…</td></tr>`;
+  try {
+    const as = await (await api(`/questions/${qId}/answers`)).json();
+    if (!as.length) {
+      tb.innerHTML = `<tr><td colspan="3"><div class="empty"><div class="e-icon">💬</div><h3>No answers yet</h3><p>Add answer options for this question.</p><button class="btn-add" onclick="openAModal()">+ Add answer</button></div></td></tr>`;
+      return;
+    }
+    tb.innerHTML = as.map(a=>`
+      <tr>
+        <td style="font-weight:500;" class="td-wrap">${a.answer_text}</td>
+        <td>
+          ${a.next_question_id
+            ? `<span class="badge badge-blue">→ Next question</span><div class="td-mono" style="margin-top:4px;" title="${a.next_question_id}">${a.next_question_id}</div>`
+            : `<span class="badge badge-green">✓ Solution</span>${a.solution_text?`<div class="td-preview" style="margin-top:4px;">${a.solution_text}</div>`:""}`}
+        </td>
+        <td><div class="row-actions">
+          <button class="btn-icon" onclick="editA('${a._id}','${esc(a.answer_text)}','${a.next_question_id||""}','${esc(a.solution_text||"")}')">Edit</button>
+          <button class="btn-icon danger" onclick="confirmDel('answer','${a._id}','${esc(a.answer_text)}')">Delete</button>
+        </div></td>
+      </tr>`).join("");
+  } catch { toast("Failed to load answers","error"); }
+}
+
+function openAModal() {
+  editId = null;
+  document.getElementById("m-a-title").textContent = "New answer";
+  ["in-a-text","in-a-next","in-a-sol"].forEach(id=>document.getElementById(id).value="");
+  om("m-a");
+  setTimeout(()=>document.getElementById("in-a-text").focus(),80);
+}
+
+function editA(id, text, next, sol) {
+  editId = id;
+  document.getElementById("m-a-title").textContent = "Edit answer";
+  document.getElementById("in-a-text").value = text;
+  document.getElementById("in-a-next").value = next;
+  document.getElementById("in-a-sol").value  = sol;
+  om("m-a");
+}
+
+async function saveA() {
+  const answer_text      = document.getElementById("in-a-text").value.trim();
+  const next_question_id = document.getElementById("in-a-next").value.trim() || null;
+  const solution_text    = document.getElementById("in-a-sol").value.trim()  || null;
+  if (!answer_text) { toast("Answer text is required","error"); return; }
+  if (!next_question_id && !solution_text) { toast("Provide a next question ID or a solution text","error"); return; }
+  try {
+    const body = editId ? {answer_text,next_question_id,solution_text} : {answer_text,next_question_id,solution_text,question_id:qId};
+    const res  = await api(editId ? `/answers/${editId}` : "/answers", { method: editId?"PUT":"POST", body: JSON.stringify(body) });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    toast(editId?"Answer updated":"Answer created");
+    cm("m-a"); loadAs(); loadDash();
+  } catch(e) { toast(e.message,"error"); }
+}
+
+// ── Knowledge Base ────────────────────────────────────
+async function loadKb() {
+  const tb = document.getElementById("kb-tbody");
+  tb.innerHTML = `<tr><td colspan="4" class="loading-cell">Loading…</td></tr>`;
+  try {
+    allKb = await (await api("/knowledge")).json();
+    document.getElementById("nc-kb").textContent = allKb.length;
+    renderKb(allKb);
+  } catch { toast("Failed to load knowledge base","error"); }
+}
+
+function renderKb(items) {
+  document.getElementById("kb-count").textContent = items.length+" entr"+(items.length===1?"y":"ies");
+  const tb = document.getElementById("kb-tbody");
+  if (!items.length) {
+    tb.innerHTML = `<tr><td colspan="4"><div class="empty"><div class="e-icon">📚</div><h3>No entries yet</h3><p>Add knowledge entries to improve the AI chatbot responses.</p><button class="btn-add" onclick="openKbModal()">+ Add entry</button></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = items.map(k=>`
+    <tr>
+      <td><span class="badge badge-gray">${k.category||"—"}</span></td>
+      <td style="font-weight:500;" class="td-wrap">${k.question}</td>
+      <td class="td-wrap" style="color:var(--text-secondary);font-size:12px;">${k.answer?k.answer.slice(0,100)+(k.answer.length>100?"…":""):"—"}</td>
+      <td><div class="row-actions">
+        <button class="btn-icon" onclick="editKb('${k._id}','${esc(k.category||"")}','${esc(k.question)}','${esc(k.answer||"")}')">Edit</button>
+        <button class="btn-icon danger" onclick="confirmDel('knowledge','${k._id}','${esc(k.question)}')">Delete</button>
+      </div></td>
+    </tr>`).join("");
+}
+
+function filterKb(q) {
+  const lq = q.toLowerCase();
+  renderKb(allKb.filter(k=>(k.question+k.answer+k.category).toLowerCase().includes(lq)));
+}
+
+function openKbModal() {
+  editId = null;
+  document.getElementById("m-kb-title").textContent = "New knowledge entry";
+  ["in-kb-cat","in-kb-q","in-kb-a"].forEach(id=>document.getElementById(id).value="");
+  om("m-kb");
+  setTimeout(()=>document.getElementById("in-kb-cat").focus(),80);
+}
+
+function editKb(id, cat, q, a) {
+  editId = id;
+  document.getElementById("m-kb-title").textContent = "Edit entry";
+  document.getElementById("in-kb-cat").value = cat;
+  document.getElementById("in-kb-q").value   = q;
+  document.getElementById("in-kb-a").value   = a;
+  om("m-kb");
+}
+
+async function saveKb() {
+  const category = document.getElementById("in-kb-cat").value.trim();
+  const question = document.getElementById("in-kb-q").value.trim();
+  const answer   = document.getElementById("in-kb-a").value.trim();
+  if (!question||!answer) { toast("Question and answer are required","error"); return; }
+  try {
+    const res = await api(editId ? `/knowledge/${editId}` : "/knowledge", { method: editId?"PUT":"POST", body: JSON.stringify({category,question,answer}) });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    toast(editId?"Entry updated":"Entry created");
+    cm("m-kb"); loadKb(); loadDash();
+  } catch(e) { toast(e.message,"error"); }
+}
+
+// ── Contacts ──────────────────────────────────────────
+async function loadContacts() {
+  const tb = document.getElementById("contacts-tbody");
+  tb.innerHTML = `<tr><td colspan="6" class="loading-cell">Loading messages…</td></tr>`;
+  try {
+    const contacts = await (await api("/contacts")).json();
+    const newC = contacts.filter(c=>c.status==="new").length;
+    document.getElementById("nc-msg").textContent = newC || contacts.length;
+    const badge = document.getElementById("new-badge");
+    if (newC>0) { badge.textContent = newC+" new"; badge.style.display="inline-flex"; }
+    else badge.style.display="none";
+
+    if (!contacts.length) {
+      tb.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="e-icon">✉️</div><h3>No messages yet</h3><p>When customers submit the contact form, their messages appear here.</p></div></td></tr>`;
+      return;
+    }
+    tb.innerHTML = contacts.map(c=>`
+      <tr>
+        <td style="font-weight:500;white-space:nowrap;">${c.firstName} ${c.lastName}</td>
+        <td style="font-size:12px;color:var(--text-secondary);">${c.email}</td>
+        <td><span class="badge badge-gray">${c.subject||"General"}</span></td>
+        <td><div class="td-preview" title="${c.message}">${c.message||"—"}</div></td>
+        <td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">${fmtDate(c.createdAt)}</td>
+        <td>
+          <select class="status-sel" onchange="updateStatus('${c._id}',this.value)">
+            <option value="new"      ${c.status==="new"?"selected":""}>🔵 New</option>
+            <option value="read"     ${c.status==="read"?"selected":""}>⚪ Read</option>
+            <option value="resolved" ${c.status==="resolved"?"selected":""}>✅ Resolved</option>
+          </select>
+        </td>
+      </tr>`).join("");
+  } catch { toast("Failed to load messages","error"); }
+}
+
+async function updateStatus(id, status) {
+  try {
+    await api(`/contacts/${id}/status`, { method:"PUT", body:JSON.stringify({status}) });
+    toast("Status updated","info");
+    loadDash();
+  } catch { toast("Failed to update","error"); }
+}
+
+// ── Delete ────────────────────────────────────────────
+function confirmDel(type, id, label) {
+  const msgs = {
+    category:  `Delete "${label}"? All related questions and answers will also be permanently deleted.`,
+    question:  `Delete this question and all its answers?`,
+    answer:    `Delete the answer "${label}"?`,
+    knowledge: `Delete the knowledge entry "${label}"?`
+  };
+  document.getElementById("del-msg").textContent = msgs[type];
+  pendDel = {type, id};
+  document.getElementById("del-btn").onclick = execDel;
+  om("m-del");
+}
+
+async function execDel() {
+  if (!pendDel) return;
+  const {type, id} = pendDel;
+  const urls = { category:`/categories/${id}`, question:`/questions/${id}`, answer:`/answers/${id}`, knowledge:`/knowledge/${id}` };
+  try {
+    const res = await api(urls[type], {method:"DELETE"});
+    if (!res.ok) throw new Error("Delete failed");
+    toast("Deleted successfully");
+    cm("m-del"); pendDel = null;
+    if (type==="category")  loadCats();
+    if (type==="question")  loadQs();
+    if (type==="answer")    loadAs();
+    if (type==="knowledge") loadKb();
+    loadDash();
+  } catch { toast("Delete failed","error"); }
+}
+
+// ── Boot ──────────────────────────────────────────────
+loadDash();
+</script>
+</body>
+</html>

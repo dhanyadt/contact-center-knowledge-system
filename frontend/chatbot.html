@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Chatbot — SupportIQ{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --brand:       #2563EB;
+    --brand-light: #EFF6FF;
+    --brand-dark:  #1D4ED8;
+    --surface:     #FFFFFF;
+    --bg:          #F8FAFC;
+    --border:      #E2E8F0;
+    --text-primary:   #0F172A;
+    --text-secondary: #64748B;
+    --text-muted:     #94A3B8;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --font: 'DM Sans', 'Segoe UI', sans-serif;
+  }
+
+  .chat-page {
+    min-height: calc(100vh - 60px);
+    background: var(--bg);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+
+  .chat-wrapper {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  .chat-header {
+    margin-bottom: 20px;
+  }
+
+  .chat-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .chat-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* Status pill */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #059669;
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #10B981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Chat card */
+  .chat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .chat-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+  }
+
+  .bot-avatar {
+    width: 36px; height: 36px;
+    background: var(--brand);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  .bot-info strong { display: block; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .bot-info span   { font-size: 12px; color: #059669; }
+
+  /* Category selector bar */
+  .category-bar {
+    padding: 12px 20px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .category-bar label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .category-bar select {
+    flex: 1;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+
+  .category-bar select:focus { border-color: var(--brand); }
+
+  /* Messages area */
+  #chatbox {
+    height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .msg-row { display: flex; flex-direction: column; gap: 4px; }
+  .msg-row.user { align-items: flex-end; }
+  .msg-row.bot  { align-items: flex-start; }
+
+  .msg-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 0 4px;
+  }
+
+  .message {
+    max-width: 75%;
+    padding: 11px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .message.user {
+    background: var(--brand);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .message.bot {
+    background: var(--bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+
+  /* Typing indicator */
+  .typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+  .typing-dots span {
+    width: 6px; height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: blink 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: .2s; }
+  .typing-dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,80%,100%{transform:scale(1);opacity:.6} 40%{transform:scale(1.3);opacity:1} }
+
+  /* Input area */
+  .chat-input-area {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    background: var(--surface);
+  }
+
+  #user_input {
+    flex: 1;
+    font-family: var(--font);
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: border-color .15s, box-shadow .15s;
+  }
+
+  #user_input:focus {
+    border-color: var(--brand);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  }
+
+  #user_input::placeholder { color: var(--text-muted); }
+
+  #send_btn {
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background .15s;
+    white-space: nowrap;
+  }
+
+  #send_btn:hover { background: var(--brand-dark); }
+  #send_btn:disabled { opacity: .6; cursor: not-allowed; }
+
+  /* Suggestions */
+  .suggestions {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .suggestion-chip {
+    font-size: 13px;
+    color: var(--brand);
+    background: var(--brand-light);
+    border: 1px solid #BFDBFE;
+    border-radius: 999px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .suggestion-chip:hover { background: #DBEAFE; }
+</style>
+
+<div class="chat-page">
+  <div class="chat-wrapper">
+
+    <div class="chat-header">
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        AI Online
+      </div>
+      <h1>AI Support Assistant</h1>
+      <p>Ask anything — I'll guide you to a solution or connect you with a human agent.</p>
+    </div>
+
+    <div class="chat-card">
+
+      <!-- Bot header -->
+      <div class="chat-card-header">
+        <div class="bot-avatar">🤖</div>
+        <div class="bot-info">
+          <strong>SupportIQ Bot</strong>
+          <span>● Online</span>
+        </div>
+      </div>
+
+      <!-- Category bar -->
+      <div class="category-bar">
+        <label for="category_select">Topic:</label>
+        <select id="category_select">
+          {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Messages -->
+      <div id="chatbox">
+        <div class="msg-row bot">
+          <span class="msg-label">SupportIQ Bot</span>
+          <div class="message bot">Hi there! 👋 Select a topic above and describe your issue — I'll do my best to help you right away.</div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <input type="text" id="user_input" placeholder="Type your question…" autocomplete="off">
+        <button id="send_btn">
+          Send
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Suggestions -->
+    <div class="suggestions">
+      <span class="suggestion-chip" onclick="fillInput(this)">How do I reset my password?</span>
+      <span class="suggestion-chip" onclick="fillInput(this)">My internet isn't working</span>
+      <span class="suggestion-chip" onclick="fillInput(this)">Update billing address</span>
+      <span class="suggestion-chip" onclick="fillInput(this)">Cancel my subscription</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const chatbox = document.getElementById("chatbox");
+const userInput = document.getElementById("user_input");
+const sendBtn = document.getElementById("send_btn");
+const categorySelect = document.getElementById("category_select");
+
+function fillInput(el) {
+  userInput.value = el.textContent;
+  userInput.focus();
+}
+
+function appendMessage(sender, text) {
+  const row = document.createElement("div");
+  row.className = "msg-row " + (sender === "User" ? "user" : "bot");
+  const label = document.createElement("span");
+  label.className = "msg-label";
+  label.textContent = sender === "User" ? "You" : "SupportIQ Bot";
+  const bubble = document.createElement("div");
+  bubble.className = "message " + (sender === "User" ? "user" : "bot");
+  bubble.textContent = text;
+  row.appendChild(label);
+  row.appendChild(bubble);
+  chatbox.appendChild(row);
+  chatbox.scrollTop = chatbox.scrollHeight;
+  return row;
+}
+
+function showTyping() {
+  const row = document.createElement("div");
+  row.className = "msg-row bot";
+  row.id = "typing-indicator";
+  const label = document.createElement("span");
+  label.className = "msg-label";
+  label.textContent = "SupportIQ Bot";
+  const bubble = document.createElement("div");
+  bubble.className = "message bot";
+  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  row.appendChild(label);
+  row.appendChild(bubble);
+  chatbox.appendChild(row);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing-indicator");
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const msg = userInput.value.trim();
+  if (!msg) return;
+  appendMessage("User", msg);
+  userInput.value = "";
+  sendBtn.disabled = true;
+  showTyping();
+  try {
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: msg, category: categorySelect.value })
+    });
+    const data = await response.json();
+    removeTyping();
+    appendMessage("Bot", data.answer);
+  } catch {
+    removeTyping();
+    appendMessage("Bot", "Sorry, I'm having trouble right now. Please try again in a moment.");
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+
+sendBtn.onclick = sendMessage;
+userInput.addEventListener("keyup", e => { if (e.key === "Enter") sendMessage(); });
+</script>
+{% endblock %}

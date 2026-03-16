@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found — SupportIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#2563EB;--brand-light:#EFF6FF;--brand-dark:#1D4ED8;
+  --surface:#FFFFFF;--bg:#F9FAFF;--border:#E2ECF5;
+  --text-primary:#122B44;--text-secondary:#4A5F7A;--text-muted:#7C8BA0;
+  --radius-sm:8px;--radius-lg:22px;--radius-xl:28px;
+  --bounce:cubic-bezier(0.34,1.56,0.64,1);
+  --font:'DM Sans','Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text-primary);min-height:100vh;display:flex;flex-direction:column}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes spinBlob{to{transform:rotate(360deg)}}
+
+header{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,236,245,.7)}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:var(--brand);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(37,99,235,.28)}
+.logo-text{font-size:18px;font-weight:700;background:linear-gradient(135deg,#122B44,#2563EB);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500;padding:8px 16px;border-radius:40px;transition:all .18s;margin-left:4px}
+nav a:hover{background:white;color:var(--brand)}
+nav .nav-cta{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white!important;margin-left:10px;box-shadow:0 8px 16px -5px rgba(37,99,235,.4)}
+
+.center{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px;position:relative;overflow:hidden}
+.center::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(37,99,235,.05),transparent 70%);top:-100px;right:-100px;border-radius:50%;animation:spinBlob 28s linear infinite}
+.box{text-align:center;max-width:460px;position:relative;z-index:1;animation:slideUp .5s ease both}
+.num{font-size:110px;font-weight:700;background:linear-gradient(145deg,var(--brand),#4F7DF3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-6px;line-height:1;margin-bottom:8px;animation:float 3s infinite ease-in-out}
+.box h1{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:10px}
+.box p{font-size:15px;color:var(--text-secondary);margin-bottom:32px;line-height:1.7}
+.links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:14px;font-weight:600;padding:11px 22px;border-radius:40px;text-decoration:none;border:1px solid transparent;transition:all .22s var(--bounce);cursor:pointer}
+.btn-primary{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white;box-shadow:0 8px 18px -6px rgba(37,99,235,.44)}
+.btn-primary:hover{transform:scale(1.05);box-shadow:0 12px 24px -8px rgba(37,99,235,.5)}
+.btn-outline{background:white;color:var(--text-primary);border-color:var(--border)}
+.btn-outline:hover{background:var(--brand-light);border-color:var(--brand);color:var(--brand);transform:scale(1.04)}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 18 18" fill="none" width="20" height="20">
+          <circle cx="9" cy="7" r="2.5" fill="white"/>
+          <path d="M4.5 14c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="logo-text">SupportIQ</span>
+    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/categories">Categories</a>
+      <a href="/faq">FAQ</a>
+      <a href="/contact" class="nav-cta">Contact</a>
+    </nav>
+  </div>
+</header>
+<div class="center">
+  <div class="box">
+    <div class="num">404</div>
+    <h1>Page not found</h1>
+    <p>The page you're looking for doesn't exist or may have been moved. Let's get you back on track.</p>
+    <div class="links">
+      <a href="/" class="btn btn-primary">← Back to home</a>
+      <a href="/categories" class="btn btn-outline">Browse categories</a>
+      <a href="/contact" class="btn btn-outline">Contact support</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

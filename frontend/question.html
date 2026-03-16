@@ -1,0 +1,12 @@
+<div data-question-id="{{ question.id }}" data-question-text="{{ question.text }}">
+  <h3 class="text-center">{{ question.text }}</h3>
+  <div id="answersArea" class="d-flex flex-column align-items-center mt-3">
+    {% for ans in answers %}
+      <button class="btn-custom" 
+        data-next="{{ ans.next_question_id or '' }}"
+        data-solution="{{ ans.solution_text or '' }}">
+        {{ ans.answer_text }}
+      </button>
+    {% endfor %}
+  </div>
+</div>

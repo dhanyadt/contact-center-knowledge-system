@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — SupportIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#2563EB;--brand-light:#EFF6FF;--brand-dark:#1D4ED8;
+  --teal:#2DD4BF;--teal-light:#CFFAFE;
+  --surface:#FFFFFF;--bg:#EEF5FF;--border:#E2ECF5;
+  --text-primary:#122B44;--text-secondary:#4A5F7A;--text-muted:#7C8BA0;
+  --danger:#EF4444;--danger-light:#FEF2F2;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:22px;--radius-xl:28px;
+  --bounce:cubic-bezier(0.34,1.56,0.64,1);
+  --font:'DM Sans','Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text-primary)}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spinBlob{to{transform:rotate(360deg)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.35)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
+header{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,236,245,.7);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;transition:all .3s var(--bounce)}
+.logo:hover{opacity:.9;transform:scale(1.02)}
+.logo-icon{width:36px;height:36px;background:linear-gradient(145deg,var(--brand),#4F7DF3);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(37,99,235,.28);transition:all .3s var(--bounce)}
+.logo:hover .logo-icon{transform:scale(1.08) rotate(3deg)}
+.logo-text{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(135deg,#122B44,#2563EB,#4F7DF3);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav{display:flex;align-items:center;gap:6px}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500;padding:8px 16px;border-radius:40px;transition:all .25s var(--bounce);position:relative}
+nav a:hover{background:white;color:var(--brand);box-shadow:0 4px 12px rgba(0,0,0,.04),0 0 0 1px rgba(37,99,235,.12);transform:translateY(-1px)}
+nav a::after{content:'';position:absolute;bottom:4px;left:50%;width:0;height:2px;background:var(--brand);transform:translateX(-50%);transition:width .2s ease}
+nav a:hover::after{width:20px}
+nav a.active{background:var(--brand-light);color:var(--brand)}
+nav a.active::after{width:20px}
+nav .nav-cta{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white!important;margin-left:10px;box-shadow:0 8px 16px -5px rgba(37,99,235,.4);border:1px solid rgba(255,255,255,.2)}
+nav .nav-cta:hover{transform:scale(1.06) translateY(-2px);box-shadow:0 16px 24px -8px rgba(37,99,235,.6)}
+nav .nav-cta::after{display:none}
+
+/* Hero */
+.hero{background:linear-gradient(150deg,#fff 0%,#F5FAFF 60%,#EEF5FF 100%);border-bottom:1px solid var(--border);padding:52px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:360px;height:360px;background:radial-gradient(circle,rgba(45,212,191,.09),transparent 70%);top:-100px;right:-80px;border-radius:50%;animation:spinBlob 28s linear infinite}
+.hero::after{content:'';position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(37,99,235,.06),transparent 70%);bottom:-80px;left:-60px;border-radius:50%;animation:spinBlob 38s reverse infinite}
+.hero-inner{max-width:600px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--brand);background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.14);padding:5px 16px;border-radius:60px;margin-bottom:18px;animation:slideUp .5s ease both}
+.hero-eyebrow .live-dot{width:7px;height:7px;background:var(--teal);border-radius:50%;animation:pulseGlow 1.8s infinite}
+.hero h1{font-size:40px;font-weight:700;letter-spacing:-1.1px;line-height:1.1;margin-bottom:12px;animation:slideUp .5s .08s both}
+.hero h1 span{background:linear-gradient(145deg,var(--brand),#4F7DF3,#2DD4BF);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientShift 5s ease infinite}
+.hero p{font-size:16px;color:var(--text-secondary);animation:slideUp .5s .16s both}
+
+/* Stats strip */
+.stats-strip{background:white;border-bottom:1px solid var(--border);padding:16px 32px}
+.stats-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:44px;flex-wrap:wrap}
+.stat-chip{display:flex;align-items:center;gap:10px}
+.stat-chip-num{font-size:19px;font-weight:700;background:linear-gradient(145deg,var(--brand),#4F7DF3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-chip-label{font-size:13px;color:var(--text-muted)}
+.stat-divider{width:1px;height:28px;background:var(--border)}
+
+/* Main grid */
+.main{max-width:1200px;margin:0 auto;padding:44px 32px 64px;display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:start}
+
+/* Form side */
+.form-col-title{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;animation:slideUp .5s ease both}
+.form-col-sub{font-size:15px;color:var(--text-secondary);margin-bottom:24px;animation:slideUp .5s .08s both}
+.form-card{background:white;border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;box-shadow:0 10px 28px -16px rgba(0,32,64,.1);animation:slideUp .5s .12s both;transition:all .3s var(--bounce)}
+.form-card:hover{box-shadow:0 20px 36px -18px rgba(37,99,235,.14);border-color:rgba(37,99,235,.18);transform:translateY(-2px)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;transition:color .2s}
+.field:focus-within label{color:var(--brand)}
+.field input,.field select,.field textarea{width:100%;font-family:var(--font);font-size:14px;color:var(--text-primary);background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:11px 14px;outline:none;transition:all .25s var(--bounce)}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:rgba(37,99,235,.3);background:white}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand);background:white;box-shadow:0 0 0 3px rgba(37,99,235,.1);transform:scale(1.01)}
+.field input.error,.field select.error,.field textarea.error{border-color:var(--danger);box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+.field textarea{min-height:130px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field-error{font-size:12px;color:var(--danger);margin-top:4px;display:none}
+.field-error.show{display:block}
+select{appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%232563EB" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');background-repeat:no-repeat;background-position:right 12px center;background-size:14px}
+.submit-btn{width:100%;background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white;border:none;border-radius:40px;padding:14px;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:all .3s var(--bounce);box-shadow:0 8px 20px -6px rgba(37,99,235,.44);position:relative;overflow:hidden}
+.submit-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%);transition:width .5s,height .5s}
+.submit-btn:hover:not(:disabled)::before{width:300px;height:300px}
+.submit-btn:hover:not(:disabled){transform:scale(1.03) translateY(-2px);box-shadow:0 16px 28px -10px rgba(37,99,235,.55)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-note{text-align:center;font-size:12px;color:var(--text-muted);margin-top:14px}
+
+/* Success */
+#success-view{display:none;background:linear-gradient(145deg,white,#F9FFFE);border:1px solid #A7F3D0;border-radius:var(--radius-xl);padding:44px 28px;text-align:center;box-shadow:0 20px 36px -16px rgba(16,185,129,.2);animation:slideUp .4s ease}
+.check-circle{width:64px;height:64px;background:linear-gradient(145deg,#10B981,#2DD4BF);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 20px;box-shadow:0 8px 18px rgba(16,185,129,.3);animation:float 3s infinite ease-in-out}
+#success-view h3{font-size:22px;font-weight:700;margin-bottom:8px}
+#success-view p{font-size:14px;color:var(--text-secondary);margin-bottom:24px}
+.btn-back{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:14px;font-weight:600;padding:11px 22px;background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white;border:none;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .3s var(--bounce);box-shadow:0 6px 14px rgba(37,99,235,.35)}
+.btn-back:hover{transform:scale(1.05) translateY(-2px)}
+
+/* Right column */
+.right-col{display:flex;flex-direction:column;gap:20px;animation:slideUp .5s .2s both}
+.channel-card{background:white;border:1px solid var(--border);border-radius:var(--radius-xl);padding:22px 24px;transition:all .3s var(--bounce);position:relative;overflow:hidden}
+.channel-card::before{content:'';position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,rgba(37,99,235,.03),transparent);transition:width .4s ease}
+.channel-card:hover::before{width:100%}
+.channel-card:hover{border-color:rgba(37,99,235,.25);box-shadow:0 16px 28px -14px rgba(37,99,235,.18);transform:translateY(-3px)}
+.channel-header{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.channel-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;transition:all .3s var(--bounce)}
+.channel-card:hover .channel-icon{transform:scale(1.1) rotate(3deg)}
+.channel-title{font-size:16px;font-weight:700;color:var(--text-primary);transition:color .2s}
+.channel-card:hover .channel-title{color:var(--brand)}
+.channel-sub{font-size:13px;color:var(--text-muted);margin-top:2px}
+.channel-detail{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.channel-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 11px;border-radius:40px;margin-top:10px}
+.badge-green{background:#ECFDF5;color:#059669}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+
+/* SLA card */
+.sla-card{background:linear-gradient(145deg,var(--brand-light),#E9F0FF);border:1px solid rgba(37,99,235,.15);border-radius:var(--radius-xl);padding:24px;transition:all .3s var(--bounce)}
+.sla-card:hover{border-color:rgba(37,99,235,.3);box-shadow:0 14px 26px -14px rgba(37,99,235,.18);transform:translateY(-2px)}
+.sla-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--brand);margin-bottom:16px}
+.sla-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:10px 0;border-bottom:1px solid rgba(37,99,235,.1);transition:transform .2s}
+.sla-row:last-child{border-bottom:none}
+.sla-row:hover{transform:translateX(3px)}
+.sla-row-label{color:var(--text-secondary);font-weight:500}
+.sla-badge{font-size:11px;font-weight:600;padding:4px 12px;border-radius:40px}
+.badge-g{background:#ECFDF5;color:#059669}
+.badge-b{background:white;color:var(--brand);border:1px solid rgba(37,99,235,.2)}
+.badge-a{background:#FFFBEB;color:#B45309}
+
+/* FAQ teaser */
+.faq-teaser{background:white;border:1px solid var(--border);border-radius:var(--radius-xl);padding:22px 24px;transition:all .3s var(--bounce)}
+.faq-teaser:hover{border-color:rgba(37,99,235,.2);box-shadow:0 12px 24px -14px rgba(37,99,235,.12);transform:translateY(-2px)}
+.faq-teaser-title{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px}
+.faq-link{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-secondary);cursor:pointer;text-decoration:none;transition:all .2s}
+.faq-link:last-child{border-bottom:none}
+.faq-link:hover{color:var(--brand);transform:translateX(4px)}
+.faq-link-arrow{color:var(--text-muted);transition:transform .2s}
+.faq-link:hover .faq-link-arrow{transform:translateX(4px);color:var(--brand)}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:500;padding:11px 22px;border-radius:40px;display:none;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.14);z-index:999;white-space:nowrap}
+#toast.show{display:flex}
+#toast.error{background:linear-gradient(145deg,var(--danger),#F87171);color:white}
+
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+@media(max-width:600px){.hero h1{font-size:30px}.field-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 18 18" fill="none" width="20" height="20">
+          <circle cx="9" cy="7" r="2.5" fill="white"/>
+          <path d="M4.5 14c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="logo-text">SupportIQ</span>
+    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/categories">Categories</a>
+      <a href="/faq">FAQ</a>
+      <a href="/about">About</a>
+      <a href="/contact" class="active nav-cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="live-dot"></span> We typically reply within 24 hours</div>
+    <h1>Get in <span>touch</span> with us</h1>
+    <p>Fill out the form and our team will get back to you. For faster help, browse categories or try the AI assistant first.</p>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-chip"><div class="stat-chip-num">&lt;2h</div><div class="stat-chip-label">Critical response</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-chip"><div class="stat-chip-num">24h</div><div class="stat-chip-label">General response</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-chip"><div class="stat-chip-num">98%</div><div class="stat-chip-label">Satisfaction rate</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-chip"><div class="stat-chip-num">24/7</div><div class="stat-chip-label">AI assistant available</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div>
+    <div class="form-col-title">Send us a message</div>
+    <p class="form-col-sub">Our support team reviews every message and responds personally.</p>
+
+    <div id="success-view">
+      <div class="check-circle">✓</div>
+      <h3>Message sent!</h3>
+      <p>Thanks for reaching out. We'll get back to you at <strong id="confirm-email"></strong> within 24 hours.</p>
+      <a href="/" class="btn-back">Back to home</a>
+    </div>
+
+    <div id="contact-form">
+      <div class="form-card">
+        <div class="field-row">
+          <div class="field">
+            <label for="fname">First name</label>
+            <input type="text" id="fname" placeholder="First name">
+            <div class="field-error" id="fname-err">Required</div>
+          </div>
+          <div class="field">
+            <label for="lname">Last name</label>
+            <input type="text" id="lname" placeholder="Last name">
+            <div class="field-error" id="lname-err">Required</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" placeholder="name@gmail.com">
+          <div class="field-error" id="email-err">Enter a valid email</div>
+        </div>
+        <div class="field">
+          <label for="subject">Subject</label>
+          <select id="subject">
+            <option value="">Select a topic…</option>
+            <option>Billing &amp; Payments</option>
+            <option>Technical Issue</option>
+            <option>Account Help</option>
+            <option>Feature Request</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Describe your issue in as much detail as you can…"></textarea>
+          <div class="field-error" id="message-err">Please enter a message</div>
+        </div>
+        <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+          <span id="btn-text">Send message</span>
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M8.5 3l4.5 4.5L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <p class="form-note">We typically reply within 24 hours on business days.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon" style="background:linear-gradient(145deg,var(--brand-light),#E9F0FF);">💬</div>
+        <div>
+          <div class="channel-title">Live Chat</div>
+          <div class="channel-sub">Fastest way to get help</div>
+        </div>
+      </div>
+      <div class="channel-detail">Connect with a support agent in real time. Available during business hours for immediate assistance.</div>
+      <div class="channel-badge badge-green">● Online · Mon–Fri, 9am–6pm</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon" style="background:linear-gradient(145deg,var(--teal-light),#E0F7FA);">📧</div>
+        <div>
+          <div class="channel-title">Email</div>
+          <div class="channel-sub">support@supportiq.com</div>
+        </div>
+      </div>
+      <div class="channel-detail">Send us a detailed message and we'll reply with a full resolution, not a canned response.</div>
+      <div class="channel-badge badge-blue">Replies within 24 hours</div>
+    </div>
+
+    <div class="sla-card">
+      <div class="sla-title">Response times</div>
+      <div class="sla-row"><span class="sla-row-label">Critical issues</span><span class="sla-badge badge-g">Under 2 hours</span></div>
+      <div class="sla-row"><span class="sla-row-label">Billing &amp; payments</span><span class="sla-badge badge-b">Under 4 hours</span></div>
+      <div class="sla-row"><span class="sla-row-label">Technical support</span><span class="sla-badge badge-b">Under 8 hours</span></div>
+      <div class="sla-row"><span class="sla-row-label">General enquiries</span><span class="sla-badge badge-a">Under 24 hours</span></div>
+    </div>
+
+    <div class="faq-teaser">
+      <div class="faq-teaser-title">Common questions — quick answers</div>
+      <a href="/faq#q-reset-password" class="faq-link"><span>How do I reset my password?</span><span class="faq-link-arrow">→</span></a>
+      <a href="/faq#q-double-charge" class="faq-link"><span>Why was I charged twice?</span><span class="faq-link-arrow">→</span></a>
+      <a href="/faq#q-slow-internet" class="faq-link"><span>Why is my internet slow?</span><span class="faq-link-arrow">→</span></a>
+      <a href="/faq#q-reset-router" class="faq-link"><span>How do I reset my router?</span><span class="faq-link-arrow">→</span></a>
+      <a href="/faq" class="faq-link" style="color:var(--brand);font-weight:600;"><span>View all FAQs</span><span class="faq-link-arrow">→</span></a>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+function showToast(msg,type="error"){const t=document.getElementById("toast");t.textContent=msg;t.className="show "+type;setTimeout(()=>t.className="",4000)}
+function validate(){let valid=true;const fields=[{id:"fname",errId:"fname-err",check:v=>v.trim().length>0},{id:"lname",errId:"lname-err",check:v=>v.trim().length>0},{id:"email",errId:"email-err",check:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())},{id:"message",errId:"message-err",check:v=>v.trim().length>5}];fields.forEach(f=>{const el=document.getElementById(f.id);const err=document.getElementById(f.errId);if(!f.check(el.value)){el.classList.add("error");err.classList.add("show");valid=false}else{el.classList.remove("error");err.classList.remove("show")}});return valid}
+async function handleSubmit(){if(!validate())return;const btn=document.getElementById("submit-btn");const text=document.getElementById("btn-text");btn.disabled=true;text.textContent="Sending…";const payload={firstName:document.getElementById("fname").value.trim(),lastName:document.getElementById("lname").value.trim(),email:document.getElementById("email").value.trim(),subject:document.getElementById("subject").value||"General",message:document.getElementById("message").value.trim()};try{const res=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await res.json();if(!res.ok)throw new Error(data.error||"Submission failed");document.getElementById("confirm-email").textContent=payload.email;document.getElementById("contact-form").style.display="none";document.getElementById("success-view").style.display="block"}catch(err){showToast(err.message||"Something went wrong. Please try again.");btn.disabled=false;text.textContent="Send message"}}
+</script>
+</body>
+</html>

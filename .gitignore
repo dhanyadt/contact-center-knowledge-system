@@ -1,0 +1,8 @@
+node_modules/
+venv/
+.venv/
+legacy-python/
+.env
+__pycache__/
+*.pyc
+*.log
