@@ -37,6 +37,10 @@ app.get("/categories", (req, res) => res.sendFile(path.join(__dirname, "../front
 app.get("/faq",        (req, res) => res.sendFile(path.join(__dirname, "../frontend/faq.html")));
 app.get("/contact",    (req, res) => res.sendFile(path.join(__dirname, "../frontend/contact.html")));
 
+app.get("/admin", (req, res) => {
+  res.redirect("http://localhost:5001/login");
+});
+
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "../frontend/404.html"));
 });
