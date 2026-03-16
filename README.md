@@ -1,4 +1,4 @@
-SupportIQ — Smart Contact Center Knowledge Management System
+SupportIQ :  Smart Contact Center Knowledge Management System
 
 SupportIQ is a full-stack web application designed to improve customer support efficiency through AI-assisted troubleshooting, a structured knowledge base, and an administrative dashboard for managing support workflows.
 
