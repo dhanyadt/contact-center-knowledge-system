@@ -223,8 +223,7 @@ async function handleLogin(){
   input.classList.remove("error");errorBox.classList.remove("show");
   btn.disabled=true;btnText.textContent="Signing in…";spinner.style.display="block";
   try{
-    const res=await fetch("http://localhost:5001/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})});
-    const data=await res.json();
+const res=await fetch("/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})});    const data=await res.json();
     if(!res.ok)throw new Error(data.error||"Login failed");
     localStorage.setItem("adminToken",data.token);
     window.location.href="/";

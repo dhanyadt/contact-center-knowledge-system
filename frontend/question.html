@@ -72,7 +72,7 @@
     {% for ans in answers %}
       <button class="btn-custom" 
         data-next="{{ ans.next_question_id or '' }}"
-        data-solution="{{ ans.solution_text or '' }}">
+        data-solution="{{ ans.solution_text or '' }}"></button>
         {{ ans.answer_text }}
       </button>
     {% endfor %}
