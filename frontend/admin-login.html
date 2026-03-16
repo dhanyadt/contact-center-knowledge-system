@@ -207,7 +207,7 @@ function isTokenValid(){
   if(!t)return false;
   try{const p=JSON.parse(atob(t.split(".")[1]));return p.exp*1000>Date.now()}catch{return false}
 }
-if(isTokenValid())window.location.href="/";
+if(isTokenValid())window.location.href="/admin";
 
 function togglePw(){const i=document.getElementById("password");i.type=i.type==="password"?"text":"password"}
 
