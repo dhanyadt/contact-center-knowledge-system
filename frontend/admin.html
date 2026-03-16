@@ -212,6 +212,31 @@ tbody td { font-size: 13px; color: var(--text-primary); padding: 13px 16px; vert
 .empty h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
 .empty p  { font-size: 13px; line-height: 1.6; max-width: 260px; }
 .empty .btn-add { margin-top: 18px; }
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .layout{flex-direction:column}
+  .sidenav{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 12px;gap:4px;border-right:none;border-bottom:1px solid rgba(255,255,255,.15)}
+  .nav-section{display:none}
+  .nav-sep{display:none}
+  .nav-user{display:none}
+  .nav-item{padding:7px 12px;border-left:none!important;border-radius:8px;font-size:12px;flex:0 0 auto}
+  .nav-item.active{background:rgba(255,255,255,.2)}
+  .main-content{min-width:0;padding:16px}
+  .topbar{padding:0 16px}
+  .topbar-brand span:last-child{display:none}
+  .topbar-badge{display:none}
+  .stat-grid{grid-template-columns:repeat(2,1fr)!important;gap:12px}
+  .toolbar{flex-direction:column;align-items:flex-start}
+  .toolbar input[type=text]{width:100%}
+  .table-wrap{overflow-x:auto}
+  .modal-box{width:95vw;padding:20px;max-height:90vh;overflow-y:auto}
+}
+@media(max-width:480px){
+  .stat-grid{grid-template-columns:1fr!important}
+  .sidenav{overflow-x:auto;flex-wrap:nowrap}
+}
+
 </style>
 </head>
 <body>
