@@ -1,4 +1,72 @@
-<div data-question-id="{{ question.id }}" data-question-text="{{ question.text }}">
+{# Responsive styles for the question/answers widget #}
+<style>
+  .question-container {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .question-container h3 {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  #answersArea {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .btn-custom {
+    width: 100%;
+    max-width: 480px;
+    padding: 12px 20px;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    word-break: break-word;
+    white-space: normal;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    .question-container {
+      padding: 20px 12px;
+    }
+
+    #answersArea {
+      gap: 10px;
+    }
+
+    .btn-custom {
+      max-width: 100%;
+      padding: 11px 16px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .question-container {
+      padding: 16px 8px;
+    }
+
+    .question-container h3 {
+      font-size: 1rem;
+    }
+
+    #answersArea {
+      gap: 8px;
+    }
+
+    .btn-custom {
+      padding: 10px 14px;
+      font-size: 0.875rem;
+    }
+  }
+</style>
+
+<div class="question-container" data-question-id="{{ question.id }}" data-question-text="{{ question.text }}">
   <h3 class="text-center">{{ question.text }}</h3>
   <div id="answersArea" class="d-flex flex-column align-items-center mt-3">
     {% for ans in answers %}

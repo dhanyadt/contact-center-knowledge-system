@@ -41,6 +41,19 @@ nav .nav-cta{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white
 nav .nav-cta:hover{transform:scale(1.06) translateY(-2px);box-shadow:0 16px 24px -8px rgba(37,99,235,.6)}
 nav .nav-cta::after{display:none}
 
+/* ── Mobile Nav ── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none;border-radius:8px;transition:background .2s}
+.hamburger:hover{background:rgba(37,99,235,.08)}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s ease}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:translateX(-8px)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-nav{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 20px 20px;z-index:99;flex-direction:column;gap:4px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.mobile-nav.open{display:flex}
+.mobile-nav a{color:var(--text-secondary);text-decoration:none;font-size:15px;font-weight:500;padding:11px 16px;border-radius:12px;transition:all .18s;display:block}
+.mobile-nav a:hover,.mobile-nav a.active{background:var(--brand-light);color:var(--brand)}
+.mobile-nav .nav-cta{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white!important;margin-top:6px;text-align:center;box-shadow:0 6px 14px rgba(37,99,235,.3)}
+
 /* Hero */
 .hero{background:linear-gradient(150deg,#fff 0%,#F5FAFF 60%,#EEF5FF 100%);border-bottom:1px solid var(--border);padding:52px 32px 48px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;width:360px;height:360px;background:radial-gradient(circle,rgba(45,212,191,.09),transparent 70%);top:-100px;right:-80px;border-radius:50%;animation:spinBlob 28s linear infinite}
@@ -140,22 +153,50 @@ select{appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=
 #toast.show{display:flex}
 #toast.error{background:linear-gradient(145deg,var(--danger),#F87171);color:white}
 
-@media(max-width:900px){.main{grid-template-columns:1fr}}
-@media(max-width:600px){.hero h1{font-size:30px}.field-row{grid-template-columns:1fr}}
- 
- 
+/* ── Responsive: Tablet nav (≤768px) ── */
+@media(max-width:768px){
+  nav{display:none}
+  .hamburger{display:flex}
+  .header-inner{padding:0 20px}
+  .hero{padding:44px 24px 40px}
+  .hero h1{font-size:34px}
+  .stats-strip{padding:14px 20px}
+  .stats-inner{gap:24px}
+  .main{padding:32px 20px 48px;gap:28px}
+}
+
+/* ── Responsive: Two-col → one-col (≤900px) ── */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .right-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .faq-teaser{grid-column:1/-1}
+}
+
+/* ── Responsive: Mobile (≤600px) ── */
 @media(max-width:600px){
   .hero{padding:36px 16px 32px}
+  .hero h1{font-size:28px;letter-spacing:-.5px}
+  .hero p{font-size:14px}
   .stats-strip{padding:12px 16px}
   .stats-inner{gap:16px}
   .stat-divider{display:none}
-  .main{padding:28px 16px 48px;gap:24px}
+  .main{padding:28px 16px 48px;gap:24px;grid-template-columns:1fr}
+  .right-col{display:flex;flex-direction:column;gap:14px}
   .form-card{padding:20px}
-  .right-col{gap:14px}
+  .form-col-title{font-size:19px}
+  .field-row{grid-template-columns:1fr}
+  .field input,.field select,.field textarea{font-size:16px;/* prevent iOS zoom */}
   .channel-card{padding:16px}
   .sla-card{padding:16px}
+  #toast{left:16px;right:16px;transform:none;white-space:normal;text-align:center}
 }
 
+/* ── Responsive: Small Mobile (≤380px) ── */
+@media(max-width:380px){
+  .hero h1{font-size:24px}
+  .form-card{padding:16px}
+  .submit-btn{font-size:14px;padding:12px}
+}
 </style>
 </head>
 <body>
@@ -178,8 +219,19 @@ select{appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=
       <a href="/about">About</a>
       <a href="/contact" class="active nav-cta">Contact</a>
     </nav>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/">Home</a>
+  <a href="/categories">Categories</a>
+  <a href="/faq">FAQ</a>
+  <a href="/about">About</a>
+  <a href="/contact" class="nav-cta active">Contact</a>
+</div>
 
 <div class="hero">
   <div class="hero-inner">
@@ -304,6 +356,17 @@ select{appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=
 <div id="toast"></div>
 
 <script>
+function toggleMenu(){
+  const btn=document.getElementById("hamburger");
+  const nav=document.getElementById("mobile-nav");
+  btn.classList.toggle("open");
+  nav.classList.toggle("open");
+}
+document.querySelectorAll(".mobile-nav a").forEach(a=>a.addEventListener("click",()=>{
+  document.getElementById("hamburger").classList.remove("open");
+  document.getElementById("mobile-nav").classList.remove("open");
+}));
+
 function showToast(msg,type="error"){const t=document.getElementById("toast");t.textContent=msg;t.className="show "+type;setTimeout(()=>t.className="",4000)}
 function validate(){let valid=true;const fields=[{id:"fname",errId:"fname-err",check:v=>v.trim().length>0},{id:"lname",errId:"lname-err",check:v=>v.trim().length>0},{id:"email",errId:"email-err",check:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())},{id:"message",errId:"message-err",check:v=>v.trim().length>5}];fields.forEach(f=>{const el=document.getElementById(f.id);const err=document.getElementById(f.errId);if(!f.check(el.value)){el.classList.add("error");err.classList.add("show");valid=false}else{el.classList.remove("error");err.classList.remove("show")}});return valid}
 async function handleSubmit(){if(!validate())return;const btn=document.getElementById("submit-btn");const text=document.getElementById("btn-text");btn.disabled=true;text.textContent="Sending…";const payload={firstName:document.getElementById("fname").value.trim(),lastName:document.getElementById("lname").value.trim(),email:document.getElementById("email").value.trim(),subject:document.getElementById("subject").value||"General",message:document.getElementById("message").value.trim()};try{const res=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await res.json();if(!res.ok)throw new Error(data.error||"Submission failed");document.getElementById("confirm-email").textContent=payload.email;document.getElementById("contact-form").style.display="none";document.getElementById("success-view").style.display="block"}catch(err){showToast(err.message||"Something went wrong. Please try again.");btn.disabled=false;text.textContent="Send message"}}

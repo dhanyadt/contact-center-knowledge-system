@@ -83,8 +83,6 @@ nav .nav-cta:hover{transform:scale(1.04) translateY(-1px)}
 .btn-white{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:14px;font-weight:600;padding:12px 24px;background:white;color:var(--brand);border:none;border-radius:40px;cursor:pointer;text-decoration:none;transition:all .2s var(--bounce);box-shadow:0 4px 10px rgba(0,0,0,.1);white-space:nowrap}
 .btn-white:hover{transform:scale(1.05);box-shadow:0 8px 18px rgba(0,0,0,.15)}
 
-@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.about-hero h1{font-size:34px}.cta-banner{flex-direction:column;text-align:center}}
-
 /* ── MOBILE NAV ── */
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none;border-radius:8px;transition:background .2s}
 .hamburger:hover{background:rgba(37,99,235,.08)}
@@ -97,23 +95,42 @@ nav .nav-cta:hover{transform:scale(1.04) translateY(-1px)}
 .mobile-nav a{color:var(--text-secondary);text-decoration:none;font-size:15px;font-weight:500;padding:11px 16px;border-radius:12px;transition:all .18s;display:block}
 .mobile-nav a:hover{background:var(--brand-light);color:var(--brand)}
 .mobile-nav .nav-cta{background:linear-gradient(145deg,var(--brand),#4F7DF3);color:white!important;margin-top:6px;text-align:center;box-shadow:0 6px 14px rgba(37,99,235,.3)}
+
+/* ── Responsive: Tablet (≤768px) ── */
 @media(max-width:768px){
   nav{display:none}
   .hamburger{display:flex}
   .header-inner{padding:0 20px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .about-hero h1{font-size:34px}
+  .cta-banner{flex-direction:column;text-align:center}
+  .cta-banner .btn-white{width:100%;justify-content:center}
 }
- 
+
+/* ── Responsive: Mobile (≤600px) ── */
 @media(max-width:600px){
   .about-hero{padding:44px 20px 36px}
   .about-hero h1{font-size:28px;letter-spacing:-.5px}
+  .about-hero p{font-size:15px}
   .container{padding:32px 16px}
   .stats-grid{gap:12px}
   .stat-num{font-size:26px}
   .two-col{gap:28px}
   .cta-banner{padding:28px 20px}
-  .team-grid{gap:12px}
+  .team-grid{gap:12px;grid-template-columns:repeat(2,1fr)}
 }
 
+/* ── Responsive: Small Mobile (≤380px) ── */
+@media(max-width:380px){
+  .logo-text{font-size:16px}
+  .about-hero h1{font-size:24px}
+  .about-hero p{font-size:14px}
+  .stat-num{font-size:22px}
+  .stat-label{font-size:12px}
+  .team-grid{grid-template-columns:1fr}
+  .cta-banner h3{font-size:18px}
+}
 </style>
 </head>
 <body>
@@ -136,8 +153,19 @@ nav .nav-cta:hover{transform:scale(1.04) translateY(-1px)}
       <a href="/about" class="active">About</a>
       <a href="/contact" class="nav-cta">Contact</a>
     </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="/">Home</a>
+  <a href="/categories">Categories</a>
+  <a href="/faq">FAQ</a>
+  <a href="/about">About</a>
+  <a href="/contact" class="nav-cta">Contact</a>
+</div>
 
 <section class="about-hero">
   <div class="about-hero-inner">
@@ -186,8 +214,6 @@ nav .nav-cta:hover{transform:scale(1.04) translateY(-1px)}
     </div>
   </div>
 
- 
-
   <div class="cta-banner">
     <div>
       <h3>Ready to transform your support?</h3>
@@ -196,5 +222,14 @@ nav .nav-cta:hover{transform:scale(1.04) translateY(-1px)}
     <a href="/categories" class="btn-white">Explore categories →</a>
   </div>
 </div>
+
+<script>
+  const btn = document.getElementById('hamburger');
+  const nav = document.getElementById('mobileNav');
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('open');
+    nav.classList.toggle('open');
+  });
+</script>
 </body>
 </html>
