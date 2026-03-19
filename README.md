@@ -71,11 +71,11 @@ config/
 server.js
 
 frontend/
-home.html
-admin.html
-admin-login.html
-categories.html
-contact.html
+home.html/
+admin.html/
+admin-login.html/
+categories.html/
+contact.html/
 faq.html
 
 
