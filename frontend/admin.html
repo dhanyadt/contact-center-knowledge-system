@@ -597,11 +597,21 @@ if (!tokenValid()) window.location.href = "/login";
 function logout() { localStorage.removeItem("adminToken"); window.location.href = "/login"; }
 
 async function api(url, opts = {}) {
-  const res = await fetch(url, {
+  const res = await fetch("/admin-api" + url, {
     ...opts,
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + getToken(), ...(opts.headers||{}) }
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + getToken(),
+      ...(opts.headers || {})
+    }
   });
-  if (res.status === 401) { localStorage.removeItem("adminToken"); window.location.href = "/login"; throw new Error("expired"); }
+
+  if (res.status === 401) {
+    localStorage.removeItem("adminToken");
+    window.location.href = "/login";
+    throw new Error("expired");
+  }
+
   return res;
 }
 
